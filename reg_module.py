@@ -21,10 +21,19 @@ class REG:
     def __init__(self):
         pass
 
-    def remove_currecy(self, currency: str, text):
-        self.currency = currency
-        self.text = text
-        if self.currency in self.expressions.keys():
-            sign = self.expressions[self.currency]
-            return float(' '.join([s[len(sign):] if s.startswith(sign) and
-                                   not s[len(sign):].isalpha() else s for s in self.text.split()]))
+    def convert_currency(self,val,sign):
+        new_val = val.replace(f'{sign}', '')
+        if ',' in new_val:
+            new_val = new_val.replace(',','')
+        return float(new_val)
+    
+    def remove_currecy(self,val:str,currency:str=None,sign:str=None):
+        self.currency=currency
+        self.val=val
+        self.sign=sign
+        if currency:
+            if self.currency in self.expressions.keys():
+                sign=self.expressions[self.currency]
+                return self.convert_currency(self.val,sign)
+        else:
+            return self.convert_currency(self.val,sign)
